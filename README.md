@@ -1,56 +1,132 @@
-Cheiloscopy-Based Person Identification using Siamese MobileViT
-Overview
+# Cheiloscopy-Based Person Identification using Siamese MobileViT-S
 
-This project implements a deep learning-based cheiloscopy recognition system for forensic person identification. Cheiloscopy refers to the study of lip print patterns, which are considered unique and stable biometric traits similar to fingerprints.
+## Overview
 
-The proposed system uses a Siamese Neural Network with a MobileViT backbone to learn discriminative embeddings between:
+This project presents a deep learning–based forensic identification system using **Cheiloscopy**, the study of lip print patterns as biometric evidence. Similar to fingerprints, lip prints contain unique groove structures and texture patterns that can be used for reliable human identification.
 
-Lip prints collected from crime scenes
+The proposed framework utilizes a **Siamese Neural Network** integrated with a **MobileViT-S encoder** to learn discriminative feature embeddings from lip-related biometric samples. The system performs similarity learning between:
 
-Lip regions extracted from suspect face images
+* Crime-scene lip print evidence
+* Lip regions extracted from suspect facial images
 
-The model learns to measure similarity between pairs of images and ranks suspects based on similarity to the crime lip print.
+By learning embedding similarity, the model ranks suspects according to their similarity score with the crime-scene lip print, enabling automated forensic person identification.
 
-Project Architecture
+---
 
-The system consists of the following stages:
+# Key Features
 
-Dataset
-   │
-   ▼
-Preprocessing
-   │
-   ├── Lip Region Extraction (MediaPipe Face Mesh)
-   └── Lip Print Enhancement (CLAHE + Gaussian Blur)
-   │
-   ▼
-Processed Dataset (.npy files)
-   │
-   ▼
-Data Augmentation
-   │
-   ▼
-Pair Generation (Positive / Negative pairs)
-   │
-   ▼
-Siamese Neural Network
-   │
-   ├── MobileViT Encoder
-   ├── Feature Embedding (128D)
-   └── L1 Distance Similarity
-   │
-   ▼
-Training
-   │
-   ▼
-Model Evaluation
-   │
-   ▼
-Ranking Based Suspect Identification
-Dataset Structure
+* Deep learning–based forensic biometric system
+* Siamese similarity learning architecture
+* MobileViT-S lightweight feature encoder
+* Automated lip region extraction using MediaPipe
+* Lip print enhancement using image preprocessing techniques
+* Similarity-based suspect ranking
+* Streamlit-based interactive interface
+* Real-time suspect comparison and identification
 
-Each identity must contain two images:
+---
 
+# System Workflow
+
+```text
+Crime Scene Lip Print + Suspect Face Images
+                    │
+                    ▼
+          Lip Region Extraction
+         (MediaPipe Face Mesh)
+                    │
+                    ▼
+         Lip Print Enhancement
+     (CLAHE + Gaussian Filtering)
+                    │
+                    ▼
+          Data Preprocessing
+                    │
+                    ▼
+         Pair Generation Module
+      (Positive / Negative Pairs)
+                    │
+                    ▼
+        Siamese MobileViT-S Network
+                    │
+     ┌──────────────┴──────────────┐
+     ▼                             ▼
+ Feature Embedding 1      Feature Embedding 2
+            │
+            ▼
+        L1 Distance
+            │
+            ▼
+     Similarity Prediction
+            │
+            ▼
+     Suspect Similarity Ranking
+```
+
+---
+
+# Project Architecture
+
+The proposed system consists of the following major modules:
+
+## 1. Lip Region Extraction
+
+* Extracts the lip region from suspect face images
+* Implemented using **MediaPipe Face Mesh**
+* Reduces irrelevant facial information
+
+## 2. Lip Print Enhancement
+
+* Enhances groove visibility and texture quality
+* Uses:
+
+  * CLAHE (Contrast Limited Adaptive Histogram Equalization)
+  * Gaussian Blur
+  * Normalization
+
+## 3. Data Augmentation
+
+To improve model generalization:
+
+* Horizontal flipping
+* Rotation
+* Gaussian blur
+* Normalization
+
+## 4. Pair Generation
+
+Creates:
+
+* Positive pairs → same identity
+* Negative pairs → different identities
+
+Used for Siamese training.
+
+## 5. Siamese MobileViT-S Network
+
+The core deep learning framework:
+
+* Shared MobileViT-S encoder
+* 128-dimensional embeddings
+* L1 distance similarity learning
+* Sigmoid similarity classification
+
+## 6. Similarity Ranking
+
+Ranks suspects according to:
+
+* embedding distance
+* similarity score
+
+Highest similarity indicates the most probable identity match.
+
+---
+
+# Dataset Structure
+
+Each identity contains:
+
+```text
 dataset/
 │
 ├── person_01/
@@ -60,17 +136,18 @@ dataset/
 ├── person_02/
 │   ├── face.png
 │   └── lip.png
-│
-├── person_03/
-│   ├── face.png
-│   └── lip.png
+```
 
-Where:
+| File     | Description                        |
+| -------- | ---------------------------------- |
+| face.png | Face image used for lip extraction |
+| lip.png  | Lip print image                    |
 
-File	Description
-face.png	Face photograph used to extract lip region
-lip.png	Lip print image
-Project Folder Structure
+---
+
+# Project Folder Structure
+
+```text
 cheiloscopy/
 │
 ├── dataset/
@@ -101,137 +178,261 @@ cheiloscopy/
 │   └── cheiloscopy_siamese_model.h5
 │
 ├── demo.py
-│
 ├── requirements.txt
 └── README.md
-Installation
+```
 
-Create a virtual environment.
+---
 
-Windows
+# Installation
+
+## Create Virtual Environment
+
+### Windows
+
+```bash
 python -m venv venv
 venv\Scripts\activate
-Linux / Mac
+```
+
+### Linux / Mac
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
-Install Dependencies
+```
+
+---
+
+# Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-If requirements file is not present:
+If requirements file is unavailable:
 
+```bash
 pip install tensorflow opencv-python mediapipe numpy tqdm streamlit keras-cv-attention-models
-Execution Pipeline
+```
 
-The project must be executed in four stages.
+---
 
-Step 1: Preprocess Dataset
+# Execution Pipeline
 
-Extract lip regions and enhance lip prints.
+---
 
-Run:
+## Step 1 — Preprocess Dataset
 
+Extract lip regions and enhance lip print quality.
+
+```bash
 python preprocessing/run_preprocessing.py
+```
 
-Output:
+### Output
 
+```text
 processed_data/
-   person_01/
-       lip_print.npy
-       lip_region.npy
-Step 2: Generate Training Pairs
+│
+├── person_01/
+│   ├── lip_print.npy
+│   └── lip_region.npy
+```
 
-Creates positive and negative image pairs with augmentation.
+---
 
-Run:
+## Step 2 — Generate Training Pairs
 
+Creates Siamese training pairs.
+
+```bash
 python pair_generation/run_pair_generation.py
+```
 
-Output:
+### Output
 
+```text
 pairs/
-   X1.npy
-   X2.npy
-   y.npy
+│
+├── X1.npy
+├── X2.npy
+└── y.npy
+```
 
-Where:
+| File   | Description       |
+| ------ | ----------------- |
+| X1.npy | Lip print images  |
+| X2.npy | Lip region images |
+| y.npy  | Pair labels       |
 
-File	Description
-X1.npy	Lip print images
-X2.npy	Lip region images
-y.npy	Labels (1 = same person, 0 = different person)
-Step 3: Train the Siamese Network
-Run:
+---
 
+## Step 3 — Train the Siamese Network
+
+```bash
 python model/train.py
-Output:
+```
+
+### Output
+
+```text
 model/
-   cheiloscopy_siamese_model.h5
-   encoder_weights.h5
+│
+├── cheiloscopy_siamese_model.h5
+└── encoder_weights.h5
+```
 
-The encoder learns 128-dimensional feature embeddings for lip images.
+The encoder learns:
 
-Step 4: Evaluate the Model
+* 128-dimensional biometric embeddings
+* similarity representations for identification
 
-Run classification evaluation:
+---
 
-Rank-1 Accuracy: 0.89
-This means the correct suspect appears first in the ranking 89% of the time.
+## Step 4 — Model Evaluation
 
-Step 6: Run the Web Interface
-A simple GUI is implemented using Streamlit.
+```bash
+python model/evaluate.py
+```
 
-Run:
+### Example Result
 
+```text
+Rank-1 Accuracy: 89%
+```
+
+Meaning:
+
+* Correct suspect appears at rank-1 in 89% of cases.
+
+---
+
+## Step 5 — Run Web Interface
+
+```bash
 streamlit run demo.py
-The interface allows the user to:
-Upload crime lip print
-Upload suspect images
-Perform similarity ranking
-Output shows ranked suspect matches based on similarity distance.
+```
 
-Model Architecture
-The system uses a Siamese Neural Network consisting of:
+The interface allows:
 
-Input Image (224x224x3)
-        │
-        ▼
-MobileViT Encoder
-        │
-        ▼
-Global Average Pooling
-        │
-        ▼
-Dense Layer (128 Embedding)
-        │
-        ▼
-Feature Vector
+* Upload crime-scene lip print
+* Upload suspect face images
+* Perform automated suspect ranking
+* Visualize similarity results
 
-Two images pass through the same encoder.
+---
+
+# Model Architecture
+
+```text
+Input Image (224×224×3)
+            │
+            ▼
+     MobileViT-S Encoder
+            │
+            ▼
+ Global Average Pooling
+            │
+            ▼
+ Dense Embedding Layer
+      (128-D Features)
+            │
+            ▼
+      Feature Vector
+```
+
+Two images pass through:
+
+* the same encoder network
+* shared weights
+
 Similarity is computed using:
-L1 Distance
-Followed by:
-Sigmoid classifier
-Data Augmentation
 
-To overcome small dataset size, augmentation is applied:
-Horizontal flipping
-Rotation
-Gaussian blur
-Normalization
+* L1 distance
+* Sigmoid similarity classifier
 
-Applications
+---
 
-This system can be used in:
-Forensic investigation
-Crime scene analysis
-Biometric authentication
-Identity verification
-Future Improvements
+# Technologies Used
 
-Possible improvements include:
+| Technology         | Purpose                 |
+| ------------------ | ----------------------- |
+| TensorFlow / Keras | Deep learning           |
+| MobileViT-S        | Feature extraction      |
+| OpenCV             | Image processing        |
+| MediaPipe          | Lip landmark extraction |
+| NumPy              | Numerical operations    |
+| Streamlit          | Web interface           |
 
-Larger cheiloscopy datasets
-Triplet loss training
-Hard-negative mining
-Advanced augmentation
-Multimodal biometric fusion
+---
+
+# Applications
+
+* Forensic person identification
+* Crime-scene investigation
+* Biometric authentication
+* Suspect ranking systems
+* Automated forensic analysis
+
+---
+
+# Future Improvements
+
+* Larger forensic lip print datasets
+* Triplet loss optimization
+* Hard-negative mining
+* Attention-based similarity learning
+* Multimodal biometric fusion
+* Real-world latent evidence validation
+
+---
+
+# Results and Output Screenshots
+
+## Suggested Sections to Add
+
+### 1. Lip Region Extraction Output
+
+(Add screenshot)
+
+### 2. Lip Print Enhancement Output
+
+(Add screenshot)
+
+### 3. Siamese Training Accuracy Graph
+
+(Add screenshot)
+
+### 4. Similarity Ranking Result
+
+(Add screenshot)
+
+### 5. Streamlit Interface
+
+(Add screenshot)
+
+### 6. Final Suspect Identification Output
+
+(Add screenshot)
+
+---
+
+# Example Output Format
+
+```text
+Crime Scene Lip Print
+        │
+        ▼
+
+Top Matching Suspects:
+1. Person_12 → 0.93 Similarity
+2. Person_07 → 0.88 Similarity
+3. Person_21 → 0.81 Similarity
+```
+
+---
+
+# Conclusion
+
+This project demonstrates the feasibility of using deep learning and Siamese similarity learning for automated forensic person identification using lip prints. By integrating MobileViT-S embeddings, lip enhancement, and biometric similarity ranking, the system provides an efficient and scalable framework for AI-assisted forensic investigations.
