@@ -407,7 +407,7 @@ Displays the main user interface for uploading:
 * Multiple suspect image upload
 * Real-time processing support
 
-![Home Interface](screenshots(216).png)
+![Home Interface](Screenshots(216).png)
 
 ---
 
@@ -421,7 +421,7 @@ Shows the uploaded latent/crime-scene lip print image used as forensic evidence.
 * Image preprocessing before inference
 * Enhanced groove visibility
 
-![Upload Interface](screenshots(217).png)
+![Upload Interface](Screenshots(217).png)
 
 ---
 
@@ -435,7 +435,7 @@ Displays uploaded suspect face images used for identification.
 * Automated lip region extraction
 * Real-time image handling
 
-![Upload Interface](screenshots(218).png)
+![Upload Interface](Screenshots(218).png)
 
 ---
 
@@ -471,7 +471,7 @@ Shows the final predicted identity with the highest similarity score.
 * Automated forensic decision support
 * Visual comparison output
 
-![Final Result](screenshots(219).png)
+![Final Result](Screenshots(219).png)
 
 ---
 
