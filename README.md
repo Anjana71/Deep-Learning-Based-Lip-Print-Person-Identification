@@ -407,7 +407,7 @@ Displays the main user interface for uploading:
 * Multiple suspect image upload
 * Real-time processing support
 
-![Home Interface](Screenshots(216).png)
+![Home Interface](Screenshot (216).png)
 
 ---
 
